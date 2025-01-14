@@ -1,30 +1,26 @@
-# Build Stage: Usar Maven para construir o projeto
+# Build Stage: Use Maven to build the project
 FROM maven:3.8.4-openjdk-17 AS build
 
-# Diretório de trabalho dentro da imagem
+# Set working directory inside the container
 WORKDIR /app
 
-# Copiar todo o código fonte para dentro do container
+# Copy the source code to the container
 COPY . .
 
-# Rodar o Maven para compilar o projeto e gerar o arquivo JAR
-RUN mvn clean install
-
-# Final Stage: Imagem final com o OpenJDK 17
+# Final Stage: Final image with OpenJDK 17
 FROM openjdk:17-jdk-slim
 
-# Metadados do autor
+# Metadata about the author
 LABEL authors="adrianogoulart"
 
-# Diretório de trabalho dentro do container
+# Set working directory inside the container
 WORKDIR /app
 
-# Copiar o arquivo JAR gerado pela etapa anterior para a imagem final
+# Copy the JAR file generated in the build stage into the final image
 COPY --from=build /app/target/echo-server-1.0-SNAPSHOT.jar /app/echo-server.jar
 
-# Expor a porta 8081 para a aplicação
+# Expose port 8081 for the application
 EXPOSE 8081
 
-# Definir o comando para rodar a aplicação no container
+# Set the command to run the application inside the container
 ENTRYPOINT ["java", "-jar", "echo-server.jar"]
-
