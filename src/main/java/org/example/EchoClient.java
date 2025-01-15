@@ -55,5 +55,4 @@ public class EchoClient {
             logger.error("Error in communication with the server: {}", e.getMessage());
         }
     }
-
 }
