@@ -56,8 +56,8 @@ public class EchoServer {
             String inputLine;
             // Interact with the client: while the client sends data
             while ((inputLine = in.readLine()) != null) {
-                logger.info("Received: {}", inputLine);
-                out.println("Message received: " + inputLine);
+                logger.info("Recebida: {}", inputLine);
+                out.println("Mensagem Recebida: " + inputLine);
 
                 // Close connection if the client sends "exit"
                 if ("exit".equalsIgnoreCase(inputLine)) {
