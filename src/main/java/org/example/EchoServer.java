@@ -54,21 +54,34 @@ public class EchoServer {
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
             String inputLine;
+            boolean headerEnd = false;
+
             // Interact with the client: while the client sends data
             while ((inputLine = in.readLine()) != null) {
+                // Log the received lines (headers and body)
                 logger.info("Received: {}", inputLine);
-                out.println("Message received: " + inputLine);
 
-                // Close connection if the client sends "exit"
-                if ("exit".equalsIgnoreCase(inputLine)) {
-                    logger.info("Client requested to close the connection.");
-                    break;  // Exit the loop if the client sends "exit"
+                // Check if the HTTP header has ended
+                if (inputLine.isEmpty()) {
+                    headerEnd = true;
+                }
+
+                // If the header has ended, the server sends an HTTP response
+                if (headerEnd) {
+                    // Send a simple HTTP header and the body with the client's message
+                    out.println("HTTP/1.1 200 OK");
+                    out.println("Content-Type: text/plain; charset=UTF-8");
+                    out.println(""); // Empty line to indicate the end of the header
+                    out.println("Message received: " + inputLine);
+                    break; // Exit after sending the response
                 }
             }
+
         } catch (IOException e) {
             logger.error("Error handling client connection: {}", e.getMessage());
         } finally {
             try {
+                // Close the client socket connection
                 clientSocket.close();
                 logger.info("Connection closed with the client.");
             } catch (IOException e) {
@@ -76,4 +89,6 @@ public class EchoServer {
             }
         }
     }
+
+
 }
