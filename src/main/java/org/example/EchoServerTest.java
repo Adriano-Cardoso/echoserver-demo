@@ -11,27 +11,27 @@ public class EchoServerTest {
 
     public static void main(String[] args) throws IOException {
         try {
-            setup();
-            testEchoMessage();
-            testExitCommand();
+            setup(); // Set up the test environment
+            testEchoMessage(); // Test sending and receiving an echo message
+            testExitCommand(); // Test sending the exit command
         } finally {
-            tearDown();
+            tearDown(); // Ensure resources are cleaned up after tests
         }
     }
 
     public static void setup() throws IOException {
-        // Inicia a conexão com o servidor
-        socket = new Socket("localhost", 8081); // Certifique-se de que o servidor esteja rodando
+        // Establish connection to the Echo server
+        socket = new Socket("localhost", 8081);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
 
-        // Verifica se a conexão foi bem estabelecida
+        // Verify that the connection was successfully established
         assert out != null : "PrintWriter should not be null";
         assert in != null : "BufferedReader should not be null";
     }
 
     public static void tearDown() throws IOException {
-        // Fecha a conexão após o teste
+        // Close the connection after the test is complete
         if (socket != null && !socket.isClosed()) {
             socket.close();
         }
@@ -39,20 +39,20 @@ public class EchoServerTest {
 
     public static void testEchoMessage() throws IOException {
         String message = "Hello, Echo Server!";
-        out.println(message); // Envia a mensagem para o servidor
-        String response = in.readLine(); // Recebe a resposta
+        out.println(message); // Send the message to the server
+        String response = in.readLine(); // Receive the response from the server
 
-        // Verifica se a resposta está conforme esperado
+        // Verify that the response matches the expected echo message
         assert response != null : "Response should not be null";
         assert response.equals("Message received: " + message) : "The message sent and received should be the same";
         System.out.println("testEchoMessage passed");
     }
 
     public static void testExitCommand() throws IOException {
-        out.println("exit"); // Envia comando "exit" para o servidor
-        String response = in.readLine(); // Recebe a resposta
+        out.println("exit"); // Send the "exit" command to the server
+        String response = in.readLine(); // Receive the response from the server
 
-        // Verifica se a resposta está conforme esperado
+        // Verify that the server correctly handles the "exit" command
         assert response != null : "Response should not be null";
         assert response.equals("Message received: exit") : "Server should correctly respond to 'exit'";
         System.out.println("testExitCommand passed");
