@@ -38,13 +38,6 @@ public class EchoClient {
                 // Log the server's response
                 String serverResponse = in.readLine();
                 logger.info("Server responded: {}", serverResponse);
-
-                // Validation: Check if the message received is the same as sent
-                if (serverResponse != null && serverResponse.equals("Message received: " + userMessage)) {
-                    logger.info("Message sent and received successfully!");
-                } else {
-                    logger.error("Message mismatch: Sent '{}' but received '{}'", userMessage, serverResponse);
-                }
             }
 
         } catch (UnknownHostException e) {
