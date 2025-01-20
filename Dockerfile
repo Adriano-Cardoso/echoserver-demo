@@ -28,3 +28,4 @@ EXPOSE 8081
 
 # Set the command to run the application inside the container
 ENTRYPOINT ["java", "-jar", "echo-server.jar"]
+
