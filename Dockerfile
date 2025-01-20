@@ -4,6 +4,9 @@ FROM maven:3.8.4-openjdk-17 AS build
 # Set working directory inside the container
 WORKDIR /app
 
+# Instalar o Netcat
+RUN apt-get update && apt-get install -y netcat && apt-get clean
+
 # Copy the source code to the container
 COPY . .
 
