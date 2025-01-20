@@ -1,18 +1,21 @@
 # Build Stage: Use Maven to build the project
-FROM maven:3.8.4-openjdk-17 AS build
+FROM eclipse-temurin:17-jdk-jammy AS build
 
 # Set working directory inside the container
 WORKDIR /app
 
-# Instalar o Netcat
+# Install Netcat
 USER root
 RUN apt-get update && apt-get install -y netcat && apt-get clean
 
 # Copy the source code to the container
 COPY . .
 
+# Build the application using Maven
+RUN apt-get install -y maven && mvn clean install
+
 # Final Stage: Final image with OpenJDK 17
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 
 # Metadata about the author
 LABEL authors="adrianogoulart"
