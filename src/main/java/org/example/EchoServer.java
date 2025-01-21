@@ -43,42 +43,22 @@ public class EchoServer {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
-            // Read the HTTP request (ignoring headers here for simplicity)
-            String requestLine = in.readLine();
-            logger.info("Received: {}", requestLine);
+            String inputLine;
+            // Envie a resposta HTTP antes de processar os dados
+            out.println("HTTP/1.1 200 OK");
+            out.println("Content-Type: text/plain");
+            out.println(""); // Linha em branco para separar cabeçalhos do corpo
 
-            // Read and discard the HTTP headers
-            String header;
-            while (!(header = in.readLine()).isEmpty()) {
-                logger.debug("Header: {}", header);
-            }
+            // Interaja com o cliente e envie a resposta
+            while ((inputLine = in.readLine()) != null) {
+                logger.info("Received: {}", inputLine);
+                out.println("Message Received: " + inputLine);
 
-            // Handle POST request
-            if (requestLine != null && requestLine.startsWith("POST")) {
-                String inputLine;
-                StringBuilder requestBody = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    requestBody.append(inputLine).append("\n");
+                // Feche a conexão se o cliente enviar "exit"
+                if ("exit".equalsIgnoreCase(inputLine)) {
+                    logger.info("Client requested to close the connection.");
+                    break;
                 }
-
-                logger.info("Received body: {}", requestBody.toString());
-
-                // Respond with HTTP/1.1 response
-                out.println("HTTP/1.1 200 OK");
-                out.println("Content-Type: text/plain");
-                out.println("Content-Length: " + requestBody.length());
-                out.println();
-                out.println("Message Received: " + requestBody.toString());
-            } else {
-                // Respond with HTTP/1.1 for other methods (like GET)
-                out.println("HTTP/1.1 405 Method Not Allowed");
-                out.println("Content-Type: text/plain");
-                out.println();
-                out.println("Only POST method is allowed");
-            }
-
-            if ("exit".equalsIgnoreCase(requestLine)) {
-                logger.info("Client requested to close the connection.");
             }
         } catch (IOException e) {
             logger.error("Error handling client connection: {}", e.getMessage());
