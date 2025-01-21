@@ -4,10 +4,6 @@ FROM eclipse-temurin:17-jdk-jammy AS build
 # Set working directory inside the container
 WORKDIR /app
 
-# Install Maven and Netcat
-USER root
-RUN apt-get update && apt-get install -y maven netcat && apt-get clean
-
 # Copy the source code to the container
 COPY . .
 
