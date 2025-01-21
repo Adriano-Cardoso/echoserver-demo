@@ -44,17 +44,28 @@ public class EchoServer {
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
             String inputLine;
-            // Envie a resposta HTTP antes de processar os dados
+            StringBuilder requestHeaders = new StringBuilder();
+
+            // Lê os cabeçalhos da requisição
+            while ((inputLine = in.readLine()) != null && !inputLine.isEmpty()) {
+                requestHeaders.append(inputLine).append("\n");
+                logger.info("Received Header: {}", inputLine);
+            }
+
+            // Exibe os cabeçalhos para depuração
+            logger.info("Request Headers:\n{}", requestHeaders.toString());
+
+            // Envia a resposta HTTP antes de processar os dados
             out.println("HTTP/1.1 200 OK");
             out.println("Content-Type: text/plain");
             out.println(""); // Linha em branco para separar cabeçalhos do corpo
 
-            // Interaja com o cliente e envie a resposta
+            // Interage com o cliente e envia a resposta
             while ((inputLine = in.readLine()) != null) {
                 logger.info("Received: {}", inputLine);
                 out.println("Message Received: " + inputLine);
 
-                // Feche a conexão se o cliente enviar "exit"
+                // Fecha a conexão se o cliente enviar "exit"
                 if ("exit".equalsIgnoreCase(inputLine)) {
                     logger.info("Client requested to close the connection.");
                     break;
