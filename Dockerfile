@@ -5,7 +5,6 @@ FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 
 USER root
-
 # Copy the source code to the container
 COPY . .
 
