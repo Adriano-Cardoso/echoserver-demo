@@ -4,6 +4,8 @@ FROM eclipse-temurin:17-jdk-jammy AS build
 # Set working directory inside the container
 WORKDIR /app
 
+USER root
+
 # Copy the source code to the container
 COPY . .
 
