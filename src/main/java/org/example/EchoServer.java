@@ -54,15 +54,21 @@ public class EchoServer {
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
             String inputLine;
-            // Interact with the client: while the client sends data
+            // Enviar cabeçalhos HTTP válidos
+            out.println("HTTP/1.1 200 OK");
+            out.println("Content-Type: text/plain; charset=utf-8");
+            out.println("Connection: close");
+            out.println(); // Linha em branco para separar os cabeçalhos do corpo
+
+            // Interagir com o cliente
             while ((inputLine = in.readLine()) != null) {
                 logger.info("Received: {}", inputLine);
                 out.println("Message Received: " + inputLine);
 
-                // Close connection if the client sends "exit"
+                // Fechar a conexão se o cliente enviar "exit"
                 if ("exit".equalsIgnoreCase(inputLine)) {
                     logger.info("Client requested to close the connection.");
-                    break;  // Exit the loop if the client sends "exit"
+                    break;
                 }
             }
         } catch (IOException e) {
