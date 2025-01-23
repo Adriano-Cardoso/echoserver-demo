@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: echo-server
-          image: adrianogoulart/demo-echo-server:add-curl
+          image: adrianogoulart/demo-echo-server:echo-server
           ports:
             - containerPort: 8081
 ---
